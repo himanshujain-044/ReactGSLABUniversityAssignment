@@ -1,0 +1,17 @@
+.Table {
+  min-width: 900px;
+}
+.TableRow {
+  /* background-color: black; */
+   color: rgb(182, 28, 28);
+}
+
+.TableCell {
+  color: rgb(204, 25, 25);
+  /* background-color: black; */
+}
+@media screen and (max-width: 600px) {
+  .Table {
+    min-width: 400px;
+  }
+}
