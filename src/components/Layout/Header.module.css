@@ -31,7 +31,7 @@
 }
 .headerBtn {
   position: absolute;
-  right: 15%;
+  right: 10%;
   display: flex;
 }
 
@@ -44,7 +44,7 @@
 
 .headingNotLogin {
   margin-left: 36%;
- 
+
   font-family: "Times New Roman", Times, serif;
   font-size: 32;
   color: white;
@@ -56,10 +56,43 @@
   /* margin-left: 20px;
   margin-left: 20px; */
 }
-
+/* .addCourse {
+  color: "black";
+  background-color: "white";
+  font-family: "sans-serif";
+} */
 .logoutIcon {
-  /* margin-top: 8px; */
-  font-size: 30px;
+  /* margin-top: 5px; */
+  font-size: 28px;
+  margin-left: 30px;
   /* margin-bottom: 20px; */
   /* margin-top: 40px; */
+}
+@media only screen and (max-width: 600px) {
+  .heading {
+    margin-left: 2%;
+    /* font-family: "Times New Roman", Times, serif; */
+    font-size: 20px;
+    /* color: white; */
+  }
+
+  .headingNotLogin {
+    margin-left: 7%;
+
+  /* /"Times New Roman", Times, serif; */
+    font-size: 20px;
+    /* color: white; */
+  }
+  .headerBtn {
+    position: absolute;
+    right: 10%;
+    display: flex;
+  }
+  .logoutIcon {
+  margin-top: 2px;
+  font-size: 25px;
+  margin-left: 8px;
+  /* margin-bottom: 20px; */
+  /* margin-top: 40px; */
+}
 }

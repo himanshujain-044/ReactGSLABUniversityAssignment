@@ -21,7 +21,7 @@ const LoginSignup = (props) => {
     <div className={styles.section}>
       <Box sx={{ width: "100%", typography: "body1" }}>
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box sx={{  borderColor: "divider" }}>
             <TabPanel value="1">Item One</TabPanel>
             <TabList
               onChange={handleChange}

@@ -62,27 +62,29 @@ const ChangePassword = (props) => {
     if (enteredNewPassword !== enteredCofirmNewPassword) {
       setIsNewPasswordMatches(false);
     }
-    console.log("Changepaswoerd");
+    if (enteredNewPassword === enteredCofirmNewPassword) {
     sendRequest({
       oldPassword: enteredOldPassword,
       newPassword: enteredNewPassword,
       confirmNewPassword: enteredCofirmNewPassword,
       token: authCtx.token,
     });
-    // console.log("isndie",response);
+    }
   };
+
   if (status === "pending") {
     return <LoadingSpinner />;
   }
   if (status === "completed") {
-    if (status === "completed") {
-      snackbar = (
-        <CommonSnackbar
-          message={response.message}
-          statusCode={response.status}
-        />
-      );
-    }
+    // if (response.status === 200) {
+    //   resetOldPasswordInput();
+    //   resetNewPasswordInput();
+    //   resetConfirmNewPasswordInput();
+    // }
+    // setIsNewPasswordMatches(true);
+    snackbar = (
+      <CommonSnackbar message={response.message} statusCode={response.status} />
+    );
   }
   return (
     <div className={classes.section}>

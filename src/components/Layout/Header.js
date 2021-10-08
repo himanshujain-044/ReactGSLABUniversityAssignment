@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect } from "react";
-import { Button, Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem, Button } from "@material-ui/core";
 import AuthContext from "../../store/auth-context";
 import { AiOutlinePlus } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
@@ -13,47 +13,51 @@ import CourseContext from "../../store/course-details";
 // import ShowCourseModal from "../CommonComp/ShowCourseModal";
 // import ChangePassword from "../CommonComp/ChangePassword";
 // import AuthContext from "../../store/auth-context";
-const BootstrapBut = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 12px",
-  border: "1px solid",
-  //   lineHeight: 1.5,
-  borderRadius: "5px",
-  backgroundColor: "black",
-  color: "white",
-  height: "38px",
-  //   borderColor: "#0063cc",
-  //   fontFamily: [
-  //     "-apple-system",
-  //     "BlinkMacSystemFont",
-  //     '"Segoe UI"',
-  //     "Roboto",
-  //     '"Helvetica Neue"',
-  //     "Arial",
-  //     "sans-serif",
-  //     '"Apple Color Emoji"',
-  //     '"Segoe UI Emoji"',
-  //     '"Segoe UI Symbol"',
-  //   ].join(","),
-  "&:hover": {
-    backgroundColor: "While",
-    color: "black",
-    // borderColor: "#0062cc",
-    // boxShadow: "none",
-  },
-  //   "&:active": {
-  //     boxShadow: "none",
-  //     backgroundColor: "#0062cc",
-  //     borderColor: "#005cbf",
-  //   },
-  //   "&:focus": {
-  //     boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  //   },
-});
+// import Button from "../CommonComp/UI/Button";
+// const BootstrapBut = styled(Button)({
+// boxShadow: "none",
+// textTransform: "none",
+// fontSize: 16,
+// padding: "6px 12px",
+// border: "1px solid",
+// //   lineHeight: 1.5,
+// borderRadius: "5px",
+// backgroundColor: "black",
+// color: "white",
+// height: "38px",
+//   borderColor: "#0063cc",
+//   fontFamily: [
+//     "-apple-system",
+//     "BlinkMacSystemFont",
+//     '"Segoe UI"',
+//     "Roboto",
+//     '"Helvetica Neue"',
+//     "Arial",
+//     "sans-serif",
+//     '"Apple Color Emoji"',
+//     '"Segoe UI Emoji"',
+//     '"Segoe UI Symbol"',
+//   ].join(","),
+// "&:hover": {
+//   backgroundColor: "While",
+//   color: "black",
+// borderColor: "#0062cc",
+// boxShadow: "none",
+// },
+//   "&:active": {
+//     boxShadow: "none",
+//     backgroundColor: "#0062cc",
+//     borderColor: "#005cbf",
+//   },
+//   "&:focus": {
+//     boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+//   },
+// });
 
 const Header = (props) => {
+  // const styles = {
+
+  // };
   // const {email,name} = JSON.parse(localStorage.getItem())
   // const [isChangePassword, setIsChangePassword] = React.useState();
   // useEffect(() => {
@@ -85,6 +89,9 @@ const Header = (props) => {
     history.push("/add-new-course");
     // courseCtx.formValue("add-course");
   };
+  const getAllCourseHandler = () => {
+    history.push("/all-course");
+  };
   // let isChangePassword = false;
   const changePasswordHandler = () => {
     // console.log("Print");
@@ -96,35 +103,43 @@ const Header = (props) => {
   // const ch = () => setIsChangePassword(false);
   return (
     <Fragment>
-        <header className={classes.header}>
+      <header className={classes.header}>
         <h1 className={isLoggedIn ? classes.heading : classes.headingNotLogin}>
           {isLoggedIn ? "" : "Welcome to "}GSLab University
         </h1>
 
         {token && (
           <div className={classes.headerBtn}>
-            <div className={classes.logoutIcon}>
-              {role === "Instructor" && (
-                <BootstrapBut
-                  variant="contained"
-                  size="small"
-                  className={classes.button}
-                  onClick={addCourseHandler}
-                >
-                  Add Course
-                </BootstrapBut>
-              )}
-              {role === "Student" && (
-                <Button
-                  variant="contained"
-                  size="small"
-                  // style={{ color: "black", backgroundColor: "white" }}
-                  className={classes.button}
-                >
-                  All Courses
-                </Button>
-              )}
-            </div>
+            {/* <div className={classes.logoutIcon}> */}
+            {role === "Instructor" && (
+              <Button
+                variant="contained"
+                size="small"
+                // className={classes.button}
+                style={{
+                  color: "black",
+                  backgroundColor: "white",
+                  fontFamily: "sans-serif",
+                }}
+                className={classes.addCourseBtn}
+                onClick={addCourseHandler}
+              >
+                Add Course
+              </Button>
+            )}
+            {role === "Student" && (
+              <Button
+                variant="contained"
+                size="small"
+                // style={{ color: "black", backgroundColor: "white" }}
+                onClick={getAllCourseHandler}
+                // className={classes.button}
+                style={{ color: "black", backgroundColor: "white" }}
+              >
+                All Courses
+              </Button>
+            )}
+            {/* </div> */}
 
             <div className={classes.logoutIcon}>
               <FaUserCircle
@@ -140,6 +155,7 @@ const Header = (props) => {
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
+              // className={classes.logoutIcon}
               onClose={handleClose}
               MenuListProps={{
                 "aria-labelledby": "basic-button",
@@ -152,7 +168,7 @@ const Header = (props) => {
                 Email:<b>{email}</b>
               </MenuItem>
               <MenuItem onClick={changePasswordHandler}>
-                Change passowrd
+                Change password
               </MenuItem>
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>
             </Menu>

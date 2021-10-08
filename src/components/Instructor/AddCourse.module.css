@@ -29,3 +29,11 @@
 .button{
     background-color: violet;
 }
+
+@media only screen and (max-width: 600px) {
+  .section {
+  /* margin: 3rem auto; */
+  width: 20rem;
+
+}
+}

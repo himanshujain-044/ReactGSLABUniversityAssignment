@@ -6,10 +6,10 @@ const AuthContext = React.createContext({
   name: "",
   role: "",
   email: "",
-  login(tokenId) {},
+  login(userData) {},
   logout() {},
 });
-
+let logoutTimer = "";
 export const AuthContextProvider = (props) => {
   //   const tokenData = retrieveStoredToken();
 
@@ -64,12 +64,16 @@ export const AuthContextProvider = (props) => {
     // const userData = {};
     // localStorage.setItem("userData", userData);
     localStorage.setItem("userData", JSON.stringify({ ...newUserData }));
+    logoutTimer = setTimeout(logoutHandler, 1000 * 60 * 60);
     // localStorage.setItem("expirationTime", expirationTime);
     // logoutTimer = setTimeout(logoutHandler, totalRemainingTime);
   };
-  const logoutHandler = (token) => {
+  const logoutHandler = () => {
     setUserData({});
     localStorage.removeItem("userData");
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
   };
 
   const contextValue = {

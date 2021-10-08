@@ -10,6 +10,7 @@ import AuthContext from "./store/auth-context";
 import { useContext } from "react";
 import AddCourse from "./components/Instructor/AddCourse";
 import ChangePassword from "./components/CommonComp/ChangePassword";
+import AllCourses from "./components/Student/AllCourses";
 // import CommonSnackbar from "./components/CommonComp/Snackbar";
 // import ShowCourseModal from "./components/CommonComp/ShowCourseModal";
 
@@ -36,6 +37,9 @@ function App() {
               <Route path="/add-new-course" exact>
                 <AddCourse />
               </Route>
+              <Route path="/all-course" exact>
+                <AllCourses />
+              </Route>
               <Route path="/show-course-detail-modal" exact>
                 <ShowCourseModal />
               </Route>
@@ -49,10 +53,7 @@ function App() {
           </Route>
         </Switch>
       </div>
-      {/* <ChangePassword
-        isDialogOpened={true}
-        // handleCloseDialog={ch}
-      /> */}
+      {/* <LoginSignup /> */}
     </div>
   );
 }

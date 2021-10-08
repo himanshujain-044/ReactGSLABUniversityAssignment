@@ -11,45 +11,40 @@ import { useHistory } from "react-router-dom";
 import ShowCourseModal from "./ShowCourseModal";
 import CourseContext from "../../store/course-details";
 import { useContext } from "react";
-const columns = [
-  { id: "courseName", label: "Cournsename" },
-  { id: "enrolled", label: "Enrolled" },
-];
-
-// function createData(name, code, population, size) {
-//   const density = population / size;
-//   return { name, code, population, size, density };
-// }
-
-const rows = [
-  { courseName: "Nodejs", enrolled: 3, id: 1 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 2 },
-  { courseName: "React", enrolled: 13, id: 3 },
-  { courseName: "Nodejs", enrolled: 3, id: 4 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 5 },
-  { courseName: "React", enrolled: 13, id: 6 },
-  { courseName: "Nodejs", enrolled: 3, id: 7 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 8 },
-  { courseName: "React", enrolled: 13, id: 9 },
-  { courseName: "Nodejs", enrolled: 3, id: 10 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 11 },
-  { courseName: "React", enrolled: 13, id: 12 },
-  { courseName: "Nodejs", enrolled: 3, id: 13 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 14 },
-  { courseName: "React", enrolled: 13, id: 15 },
-  { courseName: "Nodejs", enrolled: 3, id: 16 },
-  { courseName: "HTML/CSS", enrolled: 2, id: 17 },
-  { courseName: "React", enrolled: 13, id: 18 },
-];
+import useHttp from "../../hooks/use-http";
+import AuthContext from "../../store/auth-context";
+import { enrollUserCourse, getAllCourses } from "../../lib/api";
+import { findAllByDisplayValue } from "@testing-library/react";
+import Button from "../CommonComp/UI/Button";
+import CommonSnackbar from "./Snackbar";
 
 const CommonTable = (props) => {
-  const courseCtx = useContext(CourseContext);
-  const history = useHistory();
-  const [show, setShow] = React.useState(false);
-  const [page, setPage] = React.useState(0);
-  const [isShowModal, setIsShowModal] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  let rows = props.tableRows;
+  let columns = props.tableColumns;
+  const token = useContext(AuthContext).token;
+  const {
+    sendRequest: enrollUserCourseReq,
+    status: enrollStatus,
+    data: enrollResponse,
+    error: enrollError,
+  } = useHttp(enrollUserCourse);
+  const {
+    sendRequest: getAllCoursesReq,
+    status: allCourseStatus,
+    data: allCourseresponse,
+    error: allCourseError,
+  } = useHttp(getAllCourses, true);
+  const authCtx = useContext(AuthContext);
 
+  const courseCtx = useContext(CourseContext);
+  // const history = useHistory();
+  // const [show, setShow] = React.useState(false);
+  const [page, setPage] = React.useState(0);
+  const [latestUpdatedCourses, setLatestUpdatedCourses] = React.useState(false);
+  // const [courseDetailAndToken, setCourseDetailAndToken] = React.useState(null);
+  const [modalRequiredDetail, setModalRequiredDetail] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  // console.log("insideta", props.tableRows);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -58,19 +53,71 @@ const CommonTable = (props) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const showCourseHandler = (id) => {
-    setIsShowModal(true);
-    // console.log(courseCtx.showCourseModal)
-    courseCtx.toggleShowCourse(true);
-    // return <ShowCourseModal id={id} />;
-    // console.log(id);
-    // console.log(event.target.dataset);
-    // console.log(event.target.value);
-    // history.push("/show-course-detail-modal");
+  // let va = false;
+  const enrollCourseHandler = (courseDetail) => {
+    // index = courseDetail.index;
+    const courseDetailAndToken = {
+      ...courseDetail,
+      token: authCtx.token,
+    };
+    delete courseDetailAndToken.index;
+    setLatestUpdatedCourses(true);
+    enrollUserCourseReq(courseDetailAndToken);
   };
-
+  let snackbar = "";
+  if (enrollStatus === "completed" && latestUpdatedCourses) {
+    console.log("Yes it hs been competed");
+    setLatestUpdatedCourses(false);
+    getAllCoursesReq({ token: authCtx.token, email: authCtx.email });
+  }
+  if (allCourseStatus === "completed") {
+    rows = allCourseresponse;
+    snackbar = (
+      <CommonSnackbar
+        message={enrollResponse.message}
+        statusCode={enrollResponse.status}
+      />
+    );
+    console.log("Courseecomplete", allCourseresponse);
+  }
+  // if (status === "completed") {
+  //   if (response.data === "Course enrolled successfully") {
+  //     // rows[index]["Enrollbtn"] = true;
+  //     console.log(rows[index]);
+  //   }
+  //   console.log(response);
+  // }
+  const showCourseHandler = (courseDetail) => {
+    // courseDetail.token = authCtx.token;
+    // console.log(courseDetail)
+    // setCourseDetailAndToken({
+    //   token: authCtx.token,
+    //   createdBy: courseDetail.email,
+    //   courseName: courseDetail.courseName,
+    // });
+    setModalRequiredDetail({
+      isShowModal: true,
+      token: authCtx.token,
+      createdBy: courseDetail.email,
+      courseName: courseDetail.courseName,
+    });
+    // courseCtx.toggleShowCourse(true);
+  };
+  // if (courseDetailAndToken && !isShowModal) {
+  //   console.log("inside", isShowModal);
+  //   console.log("indise", courseDetailAndToken);
+  //   setIsShowModal(true);
+  // }
+  // console.log(courseDetailAndToken);
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper
+      sx={{
+        width: "98%",
+        overflow: "hidden",
+        marginRight: "10px",
+        marginLeft: "3px",
+      }}
+    >
       {/* <button  onClick={showCourseHandler}>
         Clcik me
       </button> */}
@@ -91,7 +138,7 @@ const CommonTable = (props) => {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
                 return (
                   <TableRow
                     hover
@@ -99,22 +146,43 @@ const CommonTable = (props) => {
                     tabIndex={-1}
                     key={row.id}
                     data-msg="Hello"
-                    onClick={showCourseHandler}
+                    // onClick={showCourseHandler}
                   >
                     {columns.map((column) => {
                       const value = row[column.id];
-                      return (
-                        // <ShowCourseModal>{value}</ShowCourseModal>
-                        <TableCell
-                          key={column.id}
-                          onClick={() => {
-                            showCourseHandler(row.id);
-                          }}
-                        >
-                          {value}
-                          {show && <ShowCourseModal id={row.id} />}
-                        </TableCell>
-                      );
+                      if (column.id !== "Enrollbtn") {
+                        return (
+                          // <ShowCourseModal>{value}</ShowCourseModal>
+                          <TableCell
+                            key={column.id}
+                            onClick={() => {
+                              if (column.id === "Coursename") {
+                                showCourseHandler({
+                                  email: row.createdByEmail,
+                                  courseName: row.Coursename,
+                                });
+                              }
+                            }}
+                          >
+                            {value}
+                          </TableCell>
+                        );
+                      } else {
+                        return (
+                          <TableCell
+                            key={column.id}
+                            onClick={() => {
+                              enrollCourseHandler({
+                                email: row.createdByEmail,
+                                courseName: row.Coursename,
+                                index,
+                              });
+                            }}
+                          >
+                            <Button disabled={value}>Enroll</Button>
+                          </TableCell>
+                        );
+                      }
                     })}
                   </TableRow>
                 );
@@ -131,7 +199,13 @@ const CommonTable = (props) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {isShowModal && <ShowCourseModal />}
+
+      <ShowCourseModal
+        modalRequiredDetail={modalRequiredDetail}
+        handleCloseModal={() => setModalRequiredDetail(false)}
+      />
+
+      {snackbar}
     </Paper>
   );
 };

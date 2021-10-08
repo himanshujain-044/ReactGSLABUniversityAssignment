@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+// import { Button } from "@material-ui/core";
 import { TextField } from "@mui/material";
 import React, { Fragment } from "react";
 import useInput from "../../hooks/use-input";
@@ -8,6 +8,11 @@ import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import classes from "./AddCourse.module.css";
 import { styled } from "@mui/material/styles";
+import useHttp from "../../hooks/use-http";
+import { addCourse } from "../../lib/api";
+import Button from "../CommonComp/UI/Button";
+import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
+import CommonSnackbar from "../CommonComp/Snackbar";
 
 const BootstrapButton = styled(Button)({
   boxShadow: "none",
@@ -53,75 +58,105 @@ const AddCourse = () => {
   const authCtx = useContext(AuthContext);
   const history = useHistory();
   const {
-    value: enteredEmail,
-    isValid: enteredEmailIsValid,
-    hasError: emailInputHasError,
-    valueChangeHandler: emailChangedHandler,
-    inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
-  } = useInput((value) => value.includes("@"));
+    value: enteredCourseName,
+    isValid: enteredCourseNameIsValid,
+    hasError: courseNameInputHasError,
+    valueChangeHandler: courseNameChangedHandler,
+    inputBlurHandler: courseNameBlurHandler,
+    reset: resetCourseNameInput,
+  } = useInput((value) => value.trim().length > 0);
 
   const {
-    value: enteredPassword,
-    isValid: enteredPasswordIsValid,
-    hasError: passwordInputHasError,
-    valueChangeHandler: passwordChangedHandler,
-    inputBlurHandler: passwordBlurHandler,
-    reset: resetPasswordInput,
-  } = useInput((value) => value.trim().length > 6);
+    value: enteredDuration,
+    isValid: enteredDurationIsValid,
+    hasError: durationInputHasError,
+    valueChangeHandler: durationChangedHandler,
+    inputBlurHandler: durationBlurHandler,
+    reset: resetDurationInput,
+  } = useInput((value) => value.trim().length > 0);
+  const {
+    value: enteredPrerequisites,
+    isValid: enteredPrerequisitesIsValid,
+    hasError: prerequisitesInputHasError,
+    valueChangeHandler: prerequisitesChangedHandler,
+    inputBlurHandler: prerequisitesBlurHandler,
+    reset: resetPrerequisitesInput,
+  } = useInput((value) => value.trim().length > 0);
   let formIsValid = false;
-
-  if (enteredPasswordIsValid && enteredEmailIsValid) {
+  const { sendRequest, status, data: response, error } = useHttp(addCourse);
+  if (
+    enteredCourseNameIsValid &&
+    enteredDurationIsValid &&
+    enteredPrerequisitesIsValid
+  ) {
     formIsValid = true;
   }
   const cancelHandler = () => {
     history.push("/instructor");
   };
-  const loginSubmitHandler = async (event) => {
+  const addCourseSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(enteredEmail, enteredPassword);
-    const { data } = await login({
-      email: enteredEmail,
-      password: enteredPassword,
-    });
-    console.log(data);
-    authCtx.login({ ...data });
-    console.log(authCtx);
-    if (data.role === "Student") {
-      history.push("/student");
-    }
-    if (data.role === "Instructor") {
-      history.push("/instructor");
-    }
-    resetEmailInput();
-    resetPasswordInput();
+    const courseDetailAndToken = {
+      courseName: enteredCourseName,
+      duration: enteredDuration,
+      prerequisites: enteredPrerequisites,
+      token: authCtx.token,
+    };
+    sendRequest(courseDetailAndToken);
+    // console.log(enteredEmail, enteredPassword);
+    // const { data } = await login({
+    //   // email: enteredEmail,
+    //   // password: enteredPassword,
+    // });
+    // console.log(data);
+    // authCtx.login({ ...data });
+    // console.log(authCtx);
+    // if (data.role === "Student") {
+    //   history.push("/student");
+    // }
+    // if (data.role === "Instructor") {
+    //   history.push("/instructor");
+    // }
+    resetCourseNameInput();
+    resetDurationInput();
+    resetPrerequisitesInput();
   };
-
+  if (status === "pending") {
+    return <LoadingSpinner />;
+  }
+  let snackbar;
+  if (status === "completed") {
+    snackbar = (
+      <CommonSnackbar message={response.message} statusCode={response.status} />
+    );
+  }
   return (
     <div className={classes.section}>
       <h4>Add your course</h4>
-      <form onSubmit={loginSubmitHandler}>
+      <form onSubmit={addCourseSubmitHandler}>
         <TextField
           id="standard-basic"
           label="Course name"
           variant="standard"
-          value={enteredEmail}
-          onChange={emailChangedHandler}
-          onBlur={emailBlurHandler}
-          error={emailInputHasError}
-          helperText={emailInputHasError ? "Valid email is required!" : " "}
+          required
+          value={enteredCourseName}
+          onChange={courseNameChangedHandler}
+          onBlur={courseNameBlurHandler}
+          error={courseNameInputHasError}
+          helperText={courseNameInputHasError ? "Atleast provide 1 char" : " "}
         />
 
         <TextField
           id="standard-basic"
           label="Duration(in Hours)"
           variant="standard"
-          value={enteredPassword}
-          onChange={passwordChangedHandler}
-          onBlur={passwordBlurHandler}
-          error={passwordInputHasError}
+          required
+          value={enteredDuration}
+          onChange={durationChangedHandler}
+          onBlur={durationBlurHandler}
+          error={durationInputHasError}
           helperText={
-            passwordInputHasError
+            durationInputHasError
               ? "Password is required(min len 6 char)!"
               : " "
           }
@@ -130,12 +165,13 @@ const AddCourse = () => {
           id="standard-basic"
           label="Prerequisite"
           variant="standard"
-          value={enteredPassword}
-          onChange={passwordChangedHandler}
-          onBlur={passwordBlurHandler}
-          error={passwordInputHasError}
+          required
+          value={enteredPrerequisites}
+          onChange={prerequisitesChangedHandler}
+          onBlur={prerequisitesBlurHandler}
+          error={prerequisitesInputHasError}
           helperText={
-            passwordInputHasError
+            prerequisitesInputHasError
               ? "Password is required(min len 6 char)!"
               : " "
           }
@@ -157,9 +193,9 @@ const AddCourse = () => {
         >
           Add course
         </Button> */}
-        <BootstrapButton variant="contained" disableRipple>
+        <Button variant="contained" type="submit" disableRipple>
           Add course
-        </BootstrapButton>
+        </Button>
         {/* <Button
           variant="contained"
           type="submit"
@@ -169,6 +205,7 @@ const AddCourse = () => {
           Add course
         </Button> */}
       </form>
+      {snackbar}
     </div>
   );
 };

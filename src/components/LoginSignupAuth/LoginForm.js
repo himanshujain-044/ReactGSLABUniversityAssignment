@@ -1,15 +1,16 @@
 import React, { Fragment } from "react";
-import { TextField, Button, Input } from "@mui/material";
+import { TextField, Input, Checkbox } from "@mui/material";
 import useInput from "../../hooks/use-input";
 import { Link, useHistory } from "react-router-dom";
 import { login } from "../../lib/api";
 import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import { IconButton, InputAdornment } from "@material-ui/core";
-
+Chrome
 const LoginForm = (props) => {
   const authCtx = useContext(AuthContext);
   const history = useHistory();
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const {
     value: enteredEmail,
     isValid: enteredEmailIsValid,
@@ -63,7 +64,6 @@ const LoginForm = (props) => {
           onChange={emailChangedHandler}
           onBlur={emailBlurHandler}
           error={emailInputHasError}
-          
           helperText={emailInputHasError ? "Valid email is required!" : " "}
         />
 
@@ -71,7 +71,6 @@ const LoginForm = (props) => {
           id="standard-basic"
           label="Password"
           variant="standard"
-          
           value={enteredPassword}
           onChange={passwordChangedHandler}
           onBlur={passwordBlurHandler}
@@ -99,6 +98,8 @@ const LoginForm = (props) => {
             </InputAdornment>
           }
         /> */}
+        {/* <br />
+        <Checkbox defaultChecked label="Keep me signin" /> */}
         <br />
         <Button
           variant="contained"
