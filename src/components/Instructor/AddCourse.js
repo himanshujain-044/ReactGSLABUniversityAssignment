@@ -1,62 +1,27 @@
 // import { Button } from "@material-ui/core";
 import { TextField } from "@mui/material";
-import React, { Fragment } from "react";
+import React from "react";
 import useInput from "../../hooks/use-input";
-import { Link, useHistory } from "react-router-dom";
-import { login } from "../../lib/api";
 import { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 import classes from "./AddCourse.module.css";
-import { styled } from "@mui/material/styles";
 import useHttp from "../../hooks/use-http";
 import { addCourse } from "../../lib/api";
 import Button from "../CommonComp/UI/Button";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 import CommonSnackbar from "../CommonComp/Snackbar";
-
-const BootstrapButton = styled(Button)({
-  boxShadow: "none",
-  textTransform: "none",
-  fontSize: 16,
-  padding: "6px 12px",
-  border: "1px solid",
-  //   lineHeight: 1.5,
-  borderRadius: "5px",
-  backgroundColor: "black",
-  color: "white",
-  height: "38px",
-  //   borderColor: "#0063cc",
-  //   fontFamily: [
-  //     "-apple-system",
-  //     "BlinkMacSystemFont",
-  //     '"Segoe UI"',
-  //     "Roboto",
-  //     '"Helvetica Neue"',
-  //     "Arial",
-  //     "sans-serif",
-  //     '"Apple Color Emoji"',
-  //     '"Segoe UI Emoji"',
-  //     '"Segoe UI Symbol"',
-  //   ].join(","),
-  "&:hover": {
-    backgroundColor: "While",
-    color: "black",
-    // borderColor: "#0062cc",
-    // boxShadow: "none",
-  },
-  //   "&:active": {
-  //     boxShadow: "none",
-  //     backgroundColor: "#0062cc",
-  //     borderColor: "#005cbf",
-  //   },
-  //   "&:focus": {
-  //     boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-  //   },
-});
+import { IconButton } from "@material-ui/core";
+import { PhotoCamera } from "@material-ui/icons";
 
 const AddCourse = () => {
   const authCtx = useContext(AuthContext);
   const history = useHistory();
+  const [courseImg, setCourseImg] = React.useState();
+  const [courseImgName, setCourseImgName] = React.useState();
+
+  const { sendRequest, status, data: response, error } = useHttp(addCourse);
+
   const {
     value: enteredCourseName,
     isValid: enteredCourseNameIsValid,
@@ -74,6 +39,7 @@ const AddCourse = () => {
     inputBlurHandler: durationBlurHandler,
     reset: resetDurationInput,
   } = useInput((value) => value.trim().length > 0);
+
   const {
     value: enteredPrerequisites,
     isValid: enteredPrerequisitesIsValid,
@@ -82,41 +48,30 @@ const AddCourse = () => {
     inputBlurHandler: prerequisitesBlurHandler,
     reset: resetPrerequisitesInput,
   } = useInput((value) => value.trim().length > 0);
-  let formIsValid = false;
-  const { sendRequest, status, data: response, error } = useHttp(addCourse);
-  if (
-    enteredCourseNameIsValid &&
-    enteredDurationIsValid &&
-    enteredPrerequisitesIsValid
-  ) {
-    formIsValid = true;
-  }
+
   const cancelHandler = () => {
     history.push("/instructor");
   };
+  const fileChangedHandler = (event) => {
+    setCourseImgName(event.target.files[0].name);
+    var reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+
+    reader.onload = (_event) => {
+      setCourseImg(reader.result);
+    };
+  };
+
   const addCourseSubmitHandler = async (event) => {
     event.preventDefault();
     const courseDetailAndToken = {
       courseName: enteredCourseName,
       duration: enteredDuration,
       prerequisites: enteredPrerequisites,
+      courseImg: courseImg,
       token: authCtx.token,
     };
     sendRequest(courseDetailAndToken);
-    // console.log(enteredEmail, enteredPassword);
-    // const { data } = await login({
-    //   // email: enteredEmail,
-    //   // password: enteredPassword,
-    // });
-    // console.log(data);
-    // authCtx.login({ ...data });
-    // console.log(authCtx);
-    // if (data.role === "Student") {
-    //   history.push("/student");
-    // }
-    // if (data.role === "Instructor") {
-    //   history.push("/instructor");
-    // }
     resetCourseNameInput();
     resetDurationInput();
     resetPrerequisitesInput();
@@ -125,7 +80,7 @@ const AddCourse = () => {
     return <LoadingSpinner />;
   }
   let snackbar;
-  if (status === "completed") {
+  if (status === "completed" && !error) {
     snackbar = (
       <CommonSnackbar message={response.message} statusCode={response.status} />
     );
@@ -177,33 +132,31 @@ const AddCourse = () => {
           }
         />
         <br />
+        <input
+          accept="image/*"
+          style={{ display: "none" }}
+          id="icon-button-file"
+          type="file"
+          onChange={fileChangedHandler}
+        />
+        <label htmlFor="icon-button-file">
+          Upload course image
+          <IconButton component="span">
+            <PhotoCamera />
+          </IconButton>
+          {courseImgName && <span>{courseImgName}</span>}
+        </label>
+
+        <br />
+        <br />
 
         <span className={classes.span} onClick={cancelHandler}>
           Cancel
         </span>
-        {/* <Button variant="outlined" size="small">
-          Outlined
-        </Button> */}
-        {/* <Button
-          variant="contained"
-          type="submit"
-          size="small"
-        //   className={classes.button}
-          sx={{ backgroundColor: "black" }}
-        >
-          Add course
-        </Button> */}
+
         <Button variant="contained" type="submit" disableRipple>
           Add course
         </Button>
-        {/* <Button
-          variant="contained"
-          type="submit"
-          disabled={!formIsValid}
-          // sx={{ backgroundColor: "black" }}
-        >
-          Add course
-        </Button> */}
       </form>
       {snackbar}
     </div>

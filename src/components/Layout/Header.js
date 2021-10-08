@@ -1,75 +1,24 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext } from "react";
 import { Menu, MenuItem, Button } from "@material-ui/core";
 import AuthContext from "../../store/auth-context";
-import { AiOutlinePlus } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
-// import HeaderCartButton from "./HeaderCartButton";
-import { useHistory } from "react-router";
-import bgImg from "../../assets/bgImg.jpg";
+import { useHistory, useLocation } from "react-router";
 import classes from "./Header.module.css";
 import { logout } from "../../lib/api";
-import { styled } from "@mui/material/styles";
-import CourseContext from "../../store/course-details";
-// import ShowCourseModal from "../CommonComp/ShowCourseModal";
-// import ChangePassword from "../CommonComp/ChangePassword";
-// import AuthContext from "../../store/auth-context";
-// import Button from "../CommonComp/UI/Button";
-// const BootstrapBut = styled(Button)({
-// boxShadow: "none",
-// textTransform: "none",
-// fontSize: 16,
-// padding: "6px 12px",
-// border: "1px solid",
-// //   lineHeight: 1.5,
-// borderRadius: "5px",
-// backgroundColor: "black",
-// color: "white",
-// height: "38px",
-//   borderColor: "#0063cc",
-//   fontFamily: [
-//     "-apple-system",
-//     "BlinkMacSystemFont",
-//     '"Segoe UI"',
-//     "Roboto",
-//     '"Helvetica Neue"',
-//     "Arial",
-//     "sans-serif",
-//     '"Apple Color Emoji"',
-//     '"Segoe UI Emoji"',
-//     '"Segoe UI Symbol"',
-//   ].join(","),
-// "&:hover": {
-//   backgroundColor: "While",
-//   color: "black",
-// borderColor: "#0062cc",
-// boxShadow: "none",
-// },
-//   "&:active": {
-//     boxShadow: "none",
-//     backgroundColor: "#0062cc",
-//     borderColor: "#005cbf",
-//   },
-//   "&:focus": {
-//     boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-//   },
-// });
+import dummyUser from "../../assets/dummyUser.png";
+import CommonSnackbar from "../CommonComp/Snackbar";
 
 const Header = (props) => {
-  // const styles = {
-
-  // };
-  // const {email,name} = JSON.parse(localStorage.getItem())
-  // const [isChangePassword, setIsChangePassword] = React.useState();
-  // useEffect(() => {
-  //   setIsChangePassword(false);
-  // }, [setIsChangePassword]);
-  // useEffect(() => {}, [isChangePassword]);
   const history = useHistory();
+  const location = useLocation();
   const authCtx = useContext(AuthContext);
-  const courseCtx = useContext(CourseContext);
-  const { token, email, name, role, isLoggedIn } = authCtx;
+  let { token, email, name, role, isLoggedIn, profile } = authCtx;
+  if (!profile) {
+    profile = dummyUser;
+  }
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -85,22 +34,22 @@ const Header = (props) => {
       history.push("/login");
     }
   };
+  const myCourseChangeHandler = () => {
+    history.goBack();
+  };
+
   const addCourseHandler = () => {
     history.push("/add-new-course");
-    // courseCtx.formValue("add-course");
   };
+
   const getAllCourseHandler = () => {
     history.push("/all-course");
   };
-  // let isChangePassword = false;
+
   const changePasswordHandler = () => {
-    // console.log("Print");
-    // isChangePassword = true;
-    // setIsChangePassword(true);
-    // courseCtx.formValue("change-password");
     history.push("/change-password");
   };
-  // const ch = () => setIsChangePassword(false);
+
   return (
     <Fragment>
       <header className={classes.header}>
@@ -110,12 +59,10 @@ const Header = (props) => {
 
         {token && (
           <div className={classes.headerBtn}>
-            {/* <div className={classes.logoutIcon}> */}
             {role === "Instructor" && (
               <Button
                 variant="contained"
                 size="small"
-                // className={classes.button}
                 style={{
                   color: "black",
                   backgroundColor: "white",
@@ -127,20 +74,28 @@ const Header = (props) => {
                 Add Course
               </Button>
             )}
-            {role === "Student" && (
+            {role === "Student" &&
+              (location.pathname === "/student" ||
+                location.pathname === "/change-password") && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={getAllCourseHandler}
+                  style={{ color: "black", backgroundColor: "white" }}
+                >
+                  All Courses
+                </Button>
+              )}
+            {role === "Student" && location.pathname === "/all-course" && (
               <Button
                 variant="contained"
                 size="small"
-                // style={{ color: "black", backgroundColor: "white" }}
-                onClick={getAllCourseHandler}
-                // className={classes.button}
+                onClick={myCourseChangeHandler}
                 style={{ color: "black", backgroundColor: "white" }}
               >
-                All Courses
+                My courses
               </Button>
             )}
-            {/* </div> */}
-
             <div className={classes.logoutIcon}>
               <FaUserCircle
                 id="basic-button"
@@ -155,12 +110,21 @@ const Header = (props) => {
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
-              // className={classes.logoutIcon}
               onClose={handleClose}
               MenuListProps={{
                 "aria-labelledby": "basic-button",
               }}
             >
+              <MenuItem>
+                <div className={classes.profile}>
+                  <img
+                    src={profile}
+                    width="100px"
+                    height="100px"
+                    alt="BigCo Inc. logo"
+                  />
+                </div>
+              </MenuItem>
               <MenuItem>
                 Name:<b>{name}</b>
               </MenuItem>

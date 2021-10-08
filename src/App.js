@@ -1,6 +1,5 @@
-// import logo from "./logo.svg";
 import "./App.css";
-import { Route, Link, Switch, Redirect } from "react-router";
+import { Route, Switch, Redirect } from "react-router";
 import Header from "./components/Layout/Header";
 import LoginSignup from "./components/LoginSignupAuth/LoginSignup";
 import Student from "./components/Student/Student";
@@ -11,12 +10,9 @@ import { useContext } from "react";
 import AddCourse from "./components/Instructor/AddCourse";
 import ChangePassword from "./components/CommonComp/ChangePassword";
 import AllCourses from "./components/Student/AllCourses";
-// import CommonSnackbar from "./components/CommonComp/Snackbar";
-// import ShowCourseModal from "./components/CommonComp/ShowCourseModal";
 
 function App() {
   const authCtx = useContext(AuthContext);
-  // console.log(authCtx.isLoggedIn);
   const isUserLoggedIn = authCtx.isLoggedIn;
   return (
     <div className="App">
@@ -53,7 +49,6 @@ function App() {
           </Route>
         </Switch>
       </div>
-      {/* <LoginSignup /> */}
     </div>
   );
 }

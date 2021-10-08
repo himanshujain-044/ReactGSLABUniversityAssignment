@@ -5,15 +5,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./store/auth-context";
-import { CourseContextProvider } from "./store/course-details";
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <CourseContextProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </CourseContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById("root")

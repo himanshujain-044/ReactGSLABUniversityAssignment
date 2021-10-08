@@ -26,16 +26,17 @@ const Student = (props) => {
   }
   let tableColumns = [
     { id: "Coursename", label: "Coursename" },
+    { id: "courseImg", label: "Course image" },
     { id: "Progress", label: "Progress" },
   ];
   return (
     <Fragment>
       <h1>Your enrolled courses</h1>
       <hr style={{ width: "200px", marginBottom: "10px" }} />
-      {status === "completed" && response === "No courses available" && (
+      {status === "completed" && response.length === 0 && (
         <p>No course available now</p>
       )}
-      {status === "completed" && (
+      {status === "completed" && response.length !== 0 && (
         <CommonTable tableColumns={tableColumns} tableRows={response} />
       )}
     </Fragment>

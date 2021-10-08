@@ -1,13 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useRef } from "react";
 import useInput from "../../hooks/use-input";
 import {
   TextField,
-  Select,
   InputLabel,
   FormControl,
-  MenuItem,
-  OutlinedInput,
-  FilledInput,
   Input,
   FormHelperText,
   NativeSelect,
@@ -18,8 +14,16 @@ import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 import CommonSnackbar from "../CommonComp/Snackbar";
 import Button from "../CommonComp/UI/Button";
 import { IconButton, InputAdornment } from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { PhotoCamera, Visibility, VisibilityOff } from "@material-ui/icons";
 const SignupForm = (props) => {
+  let formIsValid = false;
+  let snackbar = "";
+  const [role, setRole] = React.useState("Student");
+  const [profile, setProfile] = React.useState();
+  const [profileName, setProfileName] = React.useState();
+
+  const { sendRequest, status, data: response, error } = useHttp(signup);
+
   const {
     value: enteredName,
     isValid: enteredNameIsValid,
@@ -46,65 +50,51 @@ const SignupForm = (props) => {
     inputBlurHandler: passwordBlurHandler,
     reset: resetPasswordInput,
   } = useInput((value) => value.trim().length > 8);
-  let formIsValid = false;
-  let snackbar = "";
-  const { sendRequest, status, data: response, error } = useHttp(signup);
+
   if (enteredPasswordIsValid && enteredEmailIsValid && enteredNameIsValid) {
     formIsValid = true;
   }
   const signupSubmitHandler = (event) => {
     event.preventDefault();
-    // console.log(enteredEmail, enteredPassword, enteredName, role);
     sendRequest({
       name: enteredName,
       email: enteredEmail,
       password: enteredPassword,
       role: role,
+      profile: profile,
     });
     setRole("Student");
     resetEmailInput();
     resetPasswordInput();
     resetNameInput();
+    setProfile("");
   };
-  const [role, setRole] = React.useState("Student");
 
   const handleChange = (event) => {
     setRole(event.target.value);
   };
 
-  const [showPassword, setshowPassword] = React.useState(false);
+  const [values, setValues] = React.useState({
+    showPassword: false,
+  });
+  const handleClickShowPassword = () => {
+    setValues({
+      // ...values,
+      showPassword: !values.showPassword,
+    });
+  };
 
-   const [values, setValues] = React.useState({
-     amount: "",
-     password: "",
-     weight: "",
-     weightRange: "",
-     showPassword: false,
-   });
-
-   const passwordHandleChange = (prop) => (event) => {
-     setValues({ ...values, [prop]: event.target.value });
-   };
-
-   const handleClickShowPassword = () => {
-     setValues({
-       ...values,
-       showPassword: !values.showPassword,
-     });
-   };
-
-   const handleMouseDownPassword = (event) => {
-     event.preventDefault();
-   };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const fileChangedHandler = (event) => {
-    console.log(event.target.files[0]);
+    setProfileName(event.target.files[0].name);
     var reader = new FileReader();
     reader.readAsDataURL(event.target.files[0]);
 
     reader.onload = (_event) => {
-      // this.msg = "";
       console.log(reader.result);
-      // this.url = reader.result;
+      setProfile(reader.result);
     };
   };
   if (status === "pending") {
@@ -123,6 +113,7 @@ const SignupForm = (props) => {
           id="standard-basic"
           label="Name"
           variant="standard"
+          required
           value={enteredName}
           onChange={nameChangedHandler}
           onBlur={nameBlurHandler}
@@ -134,6 +125,7 @@ const SignupForm = (props) => {
           id="standard-basic"
           label="Email"
           variant="standard"
+          required
           value={enteredEmail}
           onChange={emailChangedHandler}
           onBlur={emailBlurHandler}
@@ -147,9 +139,12 @@ const SignupForm = (props) => {
           </InputLabel>
           <Input
             id="standard-adornment-password"
+            required
             type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={passwordHandleChange("password")}
+            value={enteredPassword}
+            onChange={passwordChangedHandler}
+            onBlur={passwordBlurHandler}
+            error={passwordInputHasError}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -162,37 +157,17 @@ const SignupForm = (props) => {
               </InputAdornment>
             }
           />
+          {passwordInputHasError && (
+            <FormHelperText sx={{ color: "red" }}>
+              Password length should be more than 8 char !
+            </FormHelperText>
+          )}
         </FormControl>
-        {/* <Input
-          id="standard-basic"
-          label="Password"
-          type={values.showPassword ? "text" : "password"}
-          variant="standard"
-          value={enteredPassword}
-          onChange={passwordChangedHandler}
-          onBlur={passwordBlurHandler}
-          error={passwordInputHasError}
-          helperText={
-            passwordInputHasError
-              ? "Password is required(min len 6 char)!"
-              : " "
-          }
-          sx={{ width: "80%" }}
-         
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {values.showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          }
-          
-        />  */}
+
         <br />
-        <FormControl sx={{ m: 1, minWidth: 267, marginBottom: "20px" }}>
+        <br />
+
+        <FormControl sx={{ m: 1, width: "80%", marginBottom: "20px" }}>
           <InputLabel variant="standard" htmlFor="uncontrolled-native">
             Role
           </InputLabel>
@@ -202,42 +177,21 @@ const SignupForm = (props) => {
           </NativeSelect>
         </FormControl>
         <br />
-        <FormControl sx={{ m: 1, width: "80%" }} variant="standard">
-          <InputLabel htmlFor="standard-adornment-password">
-            Password
-          </InputLabel>
-          <Input
-            id="standard-adornment-password"
-            type="file"
-            value={enteredPassword}
-            onChange={passwordChangedHandler}
-            onBlur={passwordBlurHandler}
-            error={passwordInputHasError}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        {/* <TextField
-          id="standard-basic"
-          label="Name"
-          variant="standard"
-          value={enteredName}
+
+        <input
+          accept="image/*"
+          style={{ display: "none" }}
+          id="icon-button-file"
           type="file"
           onChange={fileChangedHandler}
-          onBlur={nameBlurHandler}
-          error={nameInputHasError}
-          helperText={nameInputHasError ? "Valid email is required!" : " "}
-          sx={{ width: "80%" }}
-        /> */}
+        />
+        <label htmlFor="icon-button-file">
+          Click here to upload profile
+          <IconButton component="span">
+            <PhotoCamera />
+          </IconButton>
+          {profileName && <span>{profileName}</span>}
+        </label>
         <br />
         <Button
           variant="contained"
@@ -251,9 +205,6 @@ const SignupForm = (props) => {
         </Button>
       </form>
       {snackbar}
-      {/* {status === "completed" && (
-        <CommonSnackbar message="already" statusCode={400} />
-      )} */}
     </Fragment>
   );
 };

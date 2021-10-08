@@ -1,14 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-// import CourseContext from "../../store/course-details";
 import AuthContext from "../../store/auth-context";
-// import {} from "react";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 import useInput from "../../hooks/use-input";
 import useHttp from "../../hooks/use-http";
@@ -18,14 +11,22 @@ import { useHistory } from "react-router";
 import CommonSnackbar from "./Snackbar";
 
 const ChangePassword = (props) => {
-  const [isNewPasswordMatches, setIsNewPasswordMatches] = useState();
   let snackbar = "";
+  const authCtx = useContext(AuthContext);
+  const history = useHistory();
+  const [isNewPasswordMatches, setIsNewPasswordMatches] = useState();
+
+  const {
+    sendRequest,
+    status,
+    data: response,
+    error,
+  } = useHttp(passwordChange);
+
   useEffect(() => {
     setIsNewPasswordMatches(true);
   }, []);
-  const authCtx = useContext(AuthContext);
-  const history = useHistory();
-  console.log("chnagepassowrdinside");
+
   const {
     value: enteredOldPassword,
     isValid: enteredOldPasswordIsValid,
@@ -34,6 +35,7 @@ const ChangePassword = (props) => {
     inputBlurHandler: oldPasswordBlurHandler,
     reset: resetOldPasswordInput,
   } = useInput((value) => value.trim().length > 8);
+
   const {
     value: enteredNewPassword,
     isValid: enteredNewPasswordIsValid,
@@ -42,6 +44,7 @@ const ChangePassword = (props) => {
     inputBlurHandler: newPasswordBlurHandler,
     reset: resetNewPasswordInput,
   } = useInput((value) => value.trim().length > 8);
+
   const {
     value: enteredCofirmNewPassword,
     isValid: enteredConfirmNewPasswordIsValid,
@@ -51,24 +54,19 @@ const ChangePassword = (props) => {
     reset: resetConfirmNewPasswordInput,
   } = useInput((value) => value.trim().length > 8);
 
-  const {
-    sendRequest,
-    status,
-    data: response,
-    error,
-  } = useHttp(passwordChange);
   const changePasswordHandler = (event) => {
     event.preventDefault();
     if (enteredNewPassword !== enteredCofirmNewPassword) {
       setIsNewPasswordMatches(false);
     }
     if (enteredNewPassword === enteredCofirmNewPassword) {
-    sendRequest({
-      oldPassword: enteredOldPassword,
-      newPassword: enteredNewPassword,
-      confirmNewPassword: enteredCofirmNewPassword,
-      token: authCtx.token,
-    });
+      setIsNewPasswordMatches(true);
+      sendRequest({
+        oldPassword: enteredOldPassword,
+        newPassword: enteredNewPassword,
+        confirmNewPassword: enteredCofirmNewPassword,
+        token: authCtx.token,
+      });
     }
   };
 
@@ -76,12 +74,6 @@ const ChangePassword = (props) => {
     return <LoadingSpinner />;
   }
   if (status === "completed") {
-    // if (response.status === 200) {
-    //   resetOldPasswordInput();
-    //   resetNewPasswordInput();
-    //   resetConfirmNewPasswordInput();
-    // }
-    // setIsNewPasswordMatches(true);
     snackbar = (
       <CommonSnackbar message={response.message} statusCode={response.status} />
     );
@@ -139,7 +131,6 @@ const ChangePassword = (props) => {
         )}
         <div>
           <Button onClick={history.goBack}>Cancel</Button>
-
           <Button type="submit">Change password</Button>
         </div>
       </form>

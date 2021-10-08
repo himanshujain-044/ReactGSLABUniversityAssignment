@@ -6,6 +6,7 @@ const AuthContext = React.createContext({
   name: "",
   role: "",
   email: "",
+  profile: "",
   login(userData) {},
   logout() {},
 });
@@ -82,6 +83,7 @@ export const AuthContextProvider = (props) => {
     name: userData.name,
     role: userData.role,
     email: userData.email,
+    profile: userData.profile,
     login: loginHandler,
     logout: logoutHandler,
   };

@@ -1,4 +1,3 @@
-import { dateRangePickerDayClasses } from "@mui/lab";
 import moment from "moment";
 const serverBaseUrl = "http://localhost:8080";
 
@@ -10,26 +9,12 @@ export async function login(loginCredentials) {
       "Content-Type": "application/json",
     },
   });
-
-  //   console.log(response);
   const data = await response.json();
-  // console.log(data);
+  // console.log(data)
   if (!response.ok) {
-    throw new Error(data.message || "Could not fetch quotes.");
+    // throw new Error(data.message || "Could not fetch quotes.");
   }
-
-  //   const transformedQuotes = [];
-
-  //   for (const key in data) {
-  //     const quoteObj = {
-  //       id: key,
-  //       ...data[key],
-  //     };
-
-  //     transformedQuotes.push(quoteObj);
-  //   }
-  console.log(data.email);
-  return { data };
+  return data;
 }
 
 export async function signup(userData) {
@@ -40,29 +25,10 @@ export async function signup(userData) {
       "Content-Type": "application/json",
     },
   });
-
-  //   console.log(response);
   const data = await response.json();
-  //   console.log("hii",data);
-  //   if (!response.ok) {
-  //     // console.log(data);
-  //     throw new Error(data.message || "Could not fetch quotes.");
-  //   }
-
-  //   const transformedQuotes = [];
-
-  //   for (const key in data) {
-  //     const quoteObj = {
-  //       id: key,
-  //       ...data[key],
-  //     };
-
-  //     transformedQuotes.push(quoteObj);
-  //   }
-  //   console.log(data.email);
-  //   console.log(data);
   return data;
 }
+
 export async function logout(token) {
   const response = await fetch(`${serverBaseUrl}/logout`, {
     headers: {
@@ -72,7 +38,7 @@ export async function logout(token) {
   });
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "Token is not valid");
+    // throw new Error(data.message || "Token is not valid");
   }
 
   return { data };
@@ -93,7 +59,6 @@ export async function passwordChange(data) {
     },
   });
   const responseJSON = await response.json();
-  console.log(responseJSON);
   return responseJSON;
 }
 
@@ -107,7 +72,7 @@ export async function getUserEnrolledCourses(token) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Could not fetch quotes.");
+    // throw new Error(data.message || "Could not fetch quotes.");
   }
 
   const transformedUserCourses = [];
@@ -117,6 +82,7 @@ export async function getUserEnrolledCourses(token) {
         Coursename: element.courseName,
         Progress: "In process",
         createdByEmail: element.email,
+        courseImg: element.courseImg,
         id: index,
       };
       if (moment(new Date()).diff(moment(element.date), "days") > 15) {
@@ -127,8 +93,6 @@ export async function getUserEnrolledCourses(token) {
   } else {
     return data;
   }
-
-  console.log(transformedUserCourses);
   return transformedUserCourses;
 }
 
@@ -147,13 +111,13 @@ export async function getAllCourses(userData) {
   }
 
   const transformedUserCourses = [];
-  console.log(data.data);
   if (data.data !== "No courses available") {
     data.data.forEach((element, index) => {
       const convertedCourseDetails = {
         Coursename: element.courseName,
         Enrollbtn: element.enrolledStu.includes(email),
         createdByEmail: element.createdBy,
+        courseImg: element.courseImg,
         id: index,
       };
 
@@ -184,11 +148,6 @@ export async function getParticularCourses(courseDetailsAndToken) {
   if (!response.ok) {
     throw new Error(data.message || "Could not fetch quotes.");
   }
-
-  // const transformedUserCourses = [];
-  // console.log("ff", data.data);
-
-  // console.log("HIItra", transformedUserCourses);
   return data.data;
 }
 
@@ -206,30 +165,12 @@ export async function enrollUserCourse(courseDetailsAndToken) {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  //   console.log(response);
   const data = await response.json();
-  // console.log(data);
-  //   if (!response.ok) {
-  //     throw new Error(data.message || "Could not fetch quotes.");
-  //   }
-
-  //   const transformedQuotes = [];
-
-  //   for (const key in data) {
-  //     const quoteObj = {
-  //       id: key,
-  //       ...data[key],
-  //     };
-
-  //     transformedQuotes.push(quoteObj);
-  //   }
   console.log(data);
   return data;
 }
 
 export async function getInstructorCourses(token) {
-  //   const { token, email } = userData;
   const response = await fetch(`${serverBaseUrl}/courses`, {
     headers: {
       "Content-Type": "application/json",
@@ -238,18 +179,14 @@ export async function getInstructorCourses(token) {
   });
   const data = await response.json();
 
-  //   if (!response.ok) {
-  //     throw new Error(data.message || "Could not fetch quotes.");
-  //   }
-
   const transformedUserCourses = [];
-  console.log(data.data);
   if (data.data !== "No courses available") {
     data.data.forEach((element, index) => {
       const convertedCourseDetails = {
         Coursename: element.courseName,
         Enrolled: element.enrolledStu.length,
         createdByEmail: element.createdBy,
+        courseImg: element.courseImg,
         id: index,
       };
 
@@ -269,33 +206,19 @@ export async function addCourse(courseDetailsAndToken) {
     courseName: courseDetailsAndToken.courseName,
     duration: courseDetailsAndToken.duration,
     prerequisites: courseDetailsAndToken.prerequisites,
+    courseImg: courseDetailsAndToken.courseImg,
   };
   const response = await fetch(`${serverBaseUrl}/addcourse`, {
     method: "POST",
     body: JSON.stringify(courseDetail),
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
-  //   console.log(response);
+  console.log(response);
   const data = await response.json();
-  // console.log(data);
-  //   if (!response.ok) {
-  //     throw new Error(data.message || "Could not fetch quotes.");
-  //   }
-
-  //   const transformedQuotes = [];
-
-  //   for (const key in data) {
-  //     const quoteObj = {
-  //       id: key,
-  //       ...data[key],
-  //     };
-
-  //     transformedQuotes.push(quoteObj);
-  //   }
   console.log(data);
   return data;
 }

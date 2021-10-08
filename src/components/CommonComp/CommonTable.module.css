@@ -3,12 +3,17 @@
 }
 .TableRow {
   /* background-color: black; */
-   color: rgb(182, 28, 28);
+  color: rgb(182, 28, 28);
 }
 
 .TableCell {
   color: rgb(204, 25, 25);
   /* background-color: black; */
+}
+
+.courseImg {
+  width: 100px;
+  height: 100px;
 }
 @media screen and (max-width: 600px) {
   .Table {

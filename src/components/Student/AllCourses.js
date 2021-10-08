@@ -7,7 +7,6 @@ import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
 
 const AllCourses = (props) => {
   const authCtx = useContext(AuthContext);
-
   const {
     sendRequest,
     status,
@@ -26,12 +25,10 @@ const AllCourses = (props) => {
   if (status === "pending") {
     <LoadingSpinner />;
   }
-  // if (status === "completed" && response === "No courses available") {
-  //   return <h4>No corses available</h4>;
-  // }
 
   let tableColumns = [
     { id: "Coursename", label: "Course Name" },
+    { id: "courseImg", label: "Course image" },
     { id: "Enrollbtn", label: "Enrolled" },
   ];
   return (

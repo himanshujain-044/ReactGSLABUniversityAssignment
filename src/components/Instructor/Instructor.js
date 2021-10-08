@@ -25,6 +25,7 @@ const Instructor = (props) => {
   }
   let tableColumns = [
     { id: "Coursename", label: "Coursename" },
+   { id: "courseImg", label: "Course image" },
     { id: "Enrolled", label: "Enrolled" },
   ];
   return (
