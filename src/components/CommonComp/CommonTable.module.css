@@ -1,5 +1,5 @@
 .Table {
-  min-width: 900px;
+  max-width: 1200px;
 }
 .TableRow {
   /* background-color: black; */
@@ -14,6 +14,9 @@
 .courseImg {
   width: 100px;
   height: 100px;
+}
+.courseName:hover {
+  cursor: pointer;
 }
 @media screen and (max-width: 600px) {
   .Table {

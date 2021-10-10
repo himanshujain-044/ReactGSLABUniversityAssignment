@@ -24,7 +24,7 @@ const AddCourse = () => {
 
   const {
     value: enteredCourseName,
-    isValid: enteredCourseNameIsValid,
+   
     hasError: courseNameInputHasError,
     valueChangeHandler: courseNameChangedHandler,
     inputBlurHandler: courseNameBlurHandler,
@@ -33,7 +33,7 @@ const AddCourse = () => {
 
   const {
     value: enteredDuration,
-    isValid: enteredDurationIsValid,
+    
     hasError: durationInputHasError,
     valueChangeHandler: durationChangedHandler,
     inputBlurHandler: durationBlurHandler,
@@ -42,7 +42,7 @@ const AddCourse = () => {
 
   const {
     value: enteredPrerequisites,
-    isValid: enteredPrerequisitesIsValid,
+  
     hasError: prerequisitesInputHasError,
     valueChangeHandler: prerequisitesChangedHandler,
     inputBlurHandler: prerequisitesBlurHandler,

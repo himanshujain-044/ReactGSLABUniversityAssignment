@@ -10,7 +10,7 @@ const Instructor = (props) => {
     sendRequest,
     status,
     data: response,
-    error,
+  
   } = useHttp(getInstructorCourses, true);
   useEffect(() => {
     sendRequest(token);

@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment } from "react";
 import useInput from "../../hooks/use-input";
 import {
   TextField,
@@ -56,13 +56,15 @@ const SignupForm = (props) => {
   }
   const signupSubmitHandler = (event) => {
     event.preventDefault();
-    sendRequest({
+    const data = {
       name: enteredName,
       email: enteredEmail,
       password: enteredPassword,
       role: role,
       profile: profile,
-    });
+    };
+    console.log(data);
+    sendRequest(data);
     setRole("Student");
     resetEmailInput();
     resetPasswordInput();
@@ -79,7 +81,6 @@ const SignupForm = (props) => {
   });
   const handleClickShowPassword = () => {
     setValues({
-      // ...values,
       showPassword: !values.showPassword,
     });
   };
@@ -102,6 +103,7 @@ const SignupForm = (props) => {
   }
 
   if (status === "completed") {
+    console.log(response);
     snackbar = (
       <CommonSnackbar message={response.message} statusCode={response.status} />
     );
@@ -118,7 +120,7 @@ const SignupForm = (props) => {
           onChange={nameChangedHandler}
           onBlur={nameBlurHandler}
           error={nameInputHasError}
-          helperText={nameInputHasError ? "Valid email is required!" : " "}
+          helperText={nameInputHasError ? "Please provide a valid name" : " "}
           sx={{ width: "80%" }}
         />
         <TextField

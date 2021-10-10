@@ -11,7 +11,7 @@ const Student = (props) => {
     sendRequest,
     status,
     data: response,
-    error,
+  
   } = useHttp(getUserEnrolledCourses, true);
   useEffect(() => {
     sendRequest(token);
@@ -19,7 +19,7 @@ const Student = (props) => {
 
   console.log(response);
   if (status === "pending") {
-    <LoadingSpinner />;
+    return <LoadingSpinner />;
   }
   if (status === "completed" && response === "No courses available") {
     return <h4>No corses available</h4>;
@@ -29,17 +29,20 @@ const Student = (props) => {
     { id: "courseImg", label: "Course image" },
     { id: "Progress", label: "Progress" },
   ];
+  console.log(response);
   return (
-    <Fragment>
-      <h1>Your enrolled courses</h1>
-      <hr style={{ width: "200px", marginBottom: "10px" }} />
-      {status === "completed" && response.length === 0 && (
-        <p>No course available now</p>
-      )}
-      {status === "completed" && response.length !== 0 && (
-        <CommonTable tableColumns={tableColumns} tableRows={response} />
-      )}
-    </Fragment>
+    status === "completed" && (
+      <Fragment>
+        <h1>Your enrolled courses</h1>
+        <hr style={{ width: "200px", marginBottom: "10px" }} />
+        {status === "completed" && response.length === 0 && (
+          <p>No course available now</p>
+        )}
+        {status === "completed" && response.length !== 0 && (
+          <CommonTable tableColumns={tableColumns} tableRows={response} />
+        )}
+      </Fragment>
+    )
   );
 };
 export default Student;

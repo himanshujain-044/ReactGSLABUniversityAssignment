@@ -21,12 +21,7 @@ const style = {
 };
 
 const ShowCourseModal = ({ modalRequiredDetail, handleCloseModal }) => {
-  const {
-    sendRequest,
-    status,
-    data: response,
-    error,
-  } = useHttp(getParticularCourses);
+  const { sendRequest, status, data: response } = useHttp(getParticularCourses);
   React.useEffect(() => {
     const courseDetailAndToken = { ...modalRequiredDetail };
     delete courseDetailAndToken.isShowModal;

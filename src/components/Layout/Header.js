@@ -6,7 +6,7 @@ import { useHistory, useLocation } from "react-router";
 import classes from "./Header.module.css";
 import { logout } from "../../lib/api";
 import dummyUser from "../../assets/dummyUser.png";
-import CommonSnackbar from "../CommonComp/Snackbar";
+
 
 const Header = (props) => {
   const history = useHistory();
@@ -35,7 +35,7 @@ const Header = (props) => {
     }
   };
   const myCourseChangeHandler = () => {
-    history.goBack();
+    history.push("/student");
   };
 
   const addCourseHandler = () => {
@@ -47,6 +47,7 @@ const Header = (props) => {
   };
 
   const changePasswordHandler = () => {
+    setAnchorEl(null);
     history.push("/change-password");
   };
 

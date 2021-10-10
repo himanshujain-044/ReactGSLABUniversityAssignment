@@ -11,7 +11,7 @@ const AllCourses = (props) => {
     sendRequest,
     status,
     data: response,
-    error,
+   
   } = useHttp(getAllCourses, true);
   useEffect(() => {
     const userData = {
@@ -23,7 +23,7 @@ const AllCourses = (props) => {
 
   console.log(response);
   if (status === "pending") {
-    <LoadingSpinner />;
+    return <LoadingSpinner />;
   }
 
   let tableColumns = [
@@ -32,16 +32,18 @@ const AllCourses = (props) => {
     { id: "Enrollbtn", label: "Enrolled" },
   ];
   return (
-    <Fragment>
-      <h1>All courses</h1>
-      <hr style={{ width: "100px", marginBottom: "10px" }} />
-      {status === "completed" && response === "No courses available" && (
-        <p>No course available now</p>
-      )}
-      {status === "completed" && (
-        <CommonTable tableColumns={tableColumns} tableRows={response} />
-      )}
-    </Fragment>
+    status === "completed" && (
+      <Fragment>
+        <h1>All courses</h1>
+        <hr style={{ width: "100px", marginBottom: "10px" }} />
+        {status === "completed" && response === "No courses available" && (
+          <p>No course available now</p>
+        )}
+        {status === "completed" && response !== "No courses available" && (
+          <CommonTable tableColumns={tableColumns} tableRows={response} />
+        )}
+      </Fragment>
+    )
   );
 };
 export default AllCourses;

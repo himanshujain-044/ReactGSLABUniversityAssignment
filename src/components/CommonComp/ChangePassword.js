@@ -20,7 +20,7 @@ const ChangePassword = (props) => {
     sendRequest,
     status,
     data: response,
-    error,
+ 
   } = useHttp(passwordChange);
 
   useEffect(() => {

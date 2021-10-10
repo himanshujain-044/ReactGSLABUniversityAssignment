@@ -14,15 +14,21 @@ import {
 import { IconButton, InputAdornment } from "@material-ui/core";
 import Button from "../CommonComp/UI/Button";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import useHttp from "../../hooks/use-http";
+import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
+import CommonSnackbar from "../CommonComp/Snackbar";
+import Student from "../Student/Student";
 
 const LoginForm = (props) => {
   const authCtx = useContext(AuthContext);
   const history = useHistory();
+  let snackbar = "";
   let formIsValid = false;
   const [values, setValues] = React.useState({
     showPassword: false,
   });
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+  const { sendRequest, status, data: response } = useHttp(login);
 
   const {
     value: enteredEmail,
@@ -30,7 +36,7 @@ const LoginForm = (props) => {
     hasError: emailInputHasError,
     valueChangeHandler: emailChangedHandler,
     inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
+  
   } = useInput((value) => value.includes("@"));
 
   const {
@@ -39,7 +45,7 @@ const LoginForm = (props) => {
     hasError: passwordInputHasError,
     valueChangeHandler: passwordChangedHandler,
     inputBlurHandler: passwordBlurHandler,
-    reset: resetPasswordInput,
+  
   } = useInput((value) => value.trim().length > 6);
 
   if (enteredPasswordIsValid && enteredEmailIsValid) {
@@ -58,21 +64,58 @@ const LoginForm = (props) => {
 
   const loginSubmitHandler = async (event) => {
     event.preventDefault();
-    const data = await login({
-      email: enteredEmail,
-      password: enteredPassword,
-    });
-    authCtx.login({ ...data });
-    if (data.role === "Student") {
-      history.push("/student");
-    }
-    if (data.role === "Instructor") {
-      history.push("/instructor");
-    }
-    resetEmailInput();
-    resetPasswordInput();
+    sendRequest({ email: enteredEmail, password: enteredPassword });
   };
 
+  if (status === "pending") {
+    return <LoadingSpinner />;
+  }
+  if (status === "completed") {
+    if ([401, 404, 400, 402].includes(response.status)) {
+      snackbar = (
+        <CommonSnackbar
+          message={response.message}
+          statusCode={response.status}
+        />
+      );
+    }
+    if (response.status === 200) {
+      authCtx.login({ ...response });
+    }
+    if (authCtx.role) {
+      history.push("/student");
+    }
+
+    // console.log("g", response.role);
+    // setTimeout(() => {
+    //   console.log(authCtx);
+    // }, 1);
+    // if (authCtx.role === "Student") {
+    //   console.log("hii");
+    //   history.push("/student");
+    // }
+    // authCtx.login({ ...response });
+    // setIsFormSubmitted(false);
+    // console.log(response.message);
+    // if ([401, 404, 400, 402].includes(response.status)) {
+    //   console.log("insde 400");
+    //   snackbar = (
+    //     <CommonSnackbar
+    //       message={response.message}
+    //       statusCode={response.status}
+    //     />
+    //   );
+    //   // console.log(snackbar)
+    // } else {
+    //   console.log(response);
+    // }
+    // history.push("/student");
+  }
+  // if (status === "completed" && authCtx.role) {
+  //   console.log("jiiii");
+  //   console.log(authCtx.role);
+  //   history.push("/student");
+  // }
   return (
     <Fragment>
       <form onSubmit={loginSubmitHandler}>
@@ -145,6 +188,7 @@ const LoginForm = (props) => {
           Login
         </Button>
       </form>
+      {snackbar}
     </Fragment>
   );
 };

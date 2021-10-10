@@ -12,6 +12,29 @@ const CommonSnackbar = (props) => {
   const message = props.message || "Something went wrong!";
   const statusCode = props.statusCode;
   const isError = [401, 400, 404, 500].includes(statusCode);
+  // let snackbarSeverity = "";
+  // if (isError) {
+  //   snackbarSeverity = (
+  //     <Alert
+  //       severity="error"
+  //       onClose={handleClose}
+  //       // sx={{ width: "100%" }}
+  //     >
+  //       {message}
+  //     </Alert>
+  //   );
+  // } else {
+  //   snackbarSeverity = (
+  //     <Alert
+  //       severity="success"
+  //       onClose={handleClose}
+  //       // sx={{ width: "100%" }}
+  //     >
+  //       {message}
+  //     </Alert>
+  //   );
+  // }
+  console.log(isError);
   const [state, setState] = React.useState({
     open: true,
     Transition: Slide,
@@ -45,10 +68,20 @@ const CommonSnackbar = (props) => {
       key={state.Transition.name}
       action={action}
     >
+      {/* {isError && (
+        <Alert
+          severity="error"
+          onClose={handleClose}
+          // sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      )} */}
+      {/* {snackbarSeverity} */}
       <Alert
-        onClose={handleClose}
         severity={isError ? "error" : "success"}
-        sx={{ width: "100%" }}
+        onClose={handleClose}
+        // sx={{ width: "100%" }}
       >
         {message}
       </Alert>
@@ -57,3 +90,5 @@ const CommonSnackbar = (props) => {
 };
 
 export default CommonSnackbar;
+
+// (isError === true || isError === false) && (

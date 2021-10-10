@@ -17,14 +17,6 @@ import CommonSnackbar from "./Snackbar";
 import classes from "./CommonTable.module.css";
 
 const CommonTable = (props) => {
-  const styles = {
-    "&:hover": {
-      pointer: "cursor",
-      // color: "black",
-      // borderColor: "#0062cc",
-      // boxShadow: "none",
-    },
-  };
   let snackbar = "";
   let rows = props.tableRows;
   let columns = props.tableColumns;
@@ -38,7 +30,7 @@ const CommonTable = (props) => {
     sendRequest: enrollUserCourseReq,
     status: enrollStatus,
     data: enrollResponse,
-    error: enrollError,
+  
   } = useHttp(enrollUserCourse);
 
   let {
@@ -162,7 +154,7 @@ const CommonTable = (props) => {
                               }
                             }}
                           >
-                            {value}
+                            <span className={classes.courseName}> {value}</span>
                           </TableCell>
                         );
                       } else {
