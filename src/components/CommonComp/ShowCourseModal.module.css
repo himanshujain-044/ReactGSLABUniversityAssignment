@@ -17,3 +17,10 @@
 .closeSpan:hover {
   cursor: pointer;
 }
+.closeSpan {
+  /* margin-top: 300px; */
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+}

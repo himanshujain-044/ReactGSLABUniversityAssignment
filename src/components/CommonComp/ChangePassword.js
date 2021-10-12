@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import AuthContext from "../../store/auth-context";
 import LoadingSpinner from "../../LoadingSpinner/LoadingSpinner";
@@ -9,6 +9,7 @@ import { passwordChange } from "../../lib/api";
 import classes from "./ChangePassword.module.css";
 import { useHistory } from "react-router";
 import CommonSnackbar from "./Snackbar";
+import Button from "../CommonComp/UI/Button";
 
 const ChangePassword = (props) => {
   let snackbar = "";
@@ -16,12 +17,7 @@ const ChangePassword = (props) => {
   const history = useHistory();
   const [isNewPasswordMatches, setIsNewPasswordMatches] = useState();
 
-  const {
-    sendRequest,
-    status,
-    data: response,
- 
-  } = useHttp(passwordChange);
+  const { sendRequest, status, data: response } = useHttp(passwordChange);
 
   useEffect(() => {
     setIsNewPasswordMatches(true);
@@ -130,8 +126,14 @@ const ChangePassword = (props) => {
           </p>
         )}
         <div>
-          <Button onClick={history.goBack}>Cancel</Button>
-          <Button type="submit">Change password</Button>
+          <span onClick={history.goBack} className={classes.span}>
+            <b> Cancel</b>
+          </span>
+          <Button
+            type="submit"
+          >
+            <b>Change password</b>
+          </Button>
         </div>
       </form>
       {snackbar}

@@ -87,7 +87,7 @@ export async function getUserEnrolledCourses(token) {
         id: index,
       };
       if (moment(new Date()).diff(moment(element.date), "days") > 15) {
-        convertedCourseDetails.Progess = "Completed";
+        convertedCourseDetails.Progress = "Completed";
       }
       transformedUserCourses.push(convertedCourseDetails);
     });
@@ -149,6 +149,7 @@ export async function getParticularCourses(courseDetailsAndToken) {
   if (!response.ok) {
     throw new Error(data.message || "Could not fetch quotes.");
   }
+  console.log(data.data);
   return data.data;
 }
 

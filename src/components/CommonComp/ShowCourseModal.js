@@ -15,6 +15,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
+  // bgcolor: "background.paper",
+  width: "300px",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 5,
@@ -47,11 +49,17 @@ const ShowCourseModal = ({ modalRequiredDetail, handleCloseModal }) => {
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
+              <img
+                src={response.courseImg}
+                width="100px"
+                height="100px"
+                alt={response.courseName}
+              />
               <h3> {response.courseName}</h3>
             </Typography>
 
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <b>Duration-</b>
+              {/* <b>Duration-</b>
               {response.duration}
               &nbsp; &nbsp;
               <b>Prereqisites-</b>
@@ -59,7 +67,57 @@ const ShowCourseModal = ({ modalRequiredDetail, handleCloseModal }) => {
               <p>
                 <b>No. of students enrolled-</b>
                 {response.numberOfStuEnrolled}
-              </p>
+              </p> */}
+              {/* <div
+                style={{
+                  textAlign: "center",
+                  alignItems: "center",
+                  border: "1px solid black",
+                }}
+              > */}
+              <table
+                style={{
+                  width: "100%",
+                  marginLeft: "auto",
+                  marginRright: "auto",
+                  border: "1px solid black",
+                }}
+              >
+                <tr>
+                  <th
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                    }}
+                  >
+                    Duration:
+                  </th>
+                  <td>{response.duration}</td>
+                </tr>
+                <tr>
+                  <th
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                    }}
+                  >
+                    Prereqisites:
+                  </th>
+                  <td> {response.prerequisites}</td>
+                </tr>
+                <tr>
+                  <th
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                    }}
+                  >
+                    students enrolled:
+                  </th>
+                  <td> {response.numberOfStuEnrolled}</td>
+                </tr>
+              </table>
+              {/* </div> */}
             </Typography>
             <div
               style={{
@@ -71,12 +129,49 @@ const ShowCourseModal = ({ modalRequiredDetail, handleCloseModal }) => {
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <b>About Author</b>
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <b>Name-</b>
-                {response.instructorName}
-                &nbsp; &nbsp;
-                <b>Email-</b>
-                {response.createdBy}
+              <Typography id="modal-modal-description" sx={{ mt: 3 }}>
+                <table
+                  style={{
+                    width: "100%",
+                    marginLeft: "auto",
+                    marginRright: "auto",
+                    border: "1px solid black",
+                  }}
+                >
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                    >
+                      Name:
+                    </th>
+                    <td>{response.instructorName}</td>
+                  </tr>
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                    >
+                      Email:
+                    </th>
+                    <td>{response.createdBy}</td>
+                  </tr>
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                    >
+                      Telephone:
+                    </th>
+                    <td>555 77 855</td>
+                  </tr>
+                </table>
               </Typography>
             </div>
             <span onClick={handleClose} className={classes.closeSpan}>

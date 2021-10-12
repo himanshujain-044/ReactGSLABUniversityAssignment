@@ -15,6 +15,7 @@ import { enrollUserCourse, getAllCourses } from "../../lib/api";
 import Button from "../CommonComp/UI/Button";
 import CommonSnackbar from "./Snackbar";
 import classes from "./CommonTable.module.css";
+import dummyCourseImg from "../../assets/dummyCourseImg.jpeg";
 
 const CommonTable = (props) => {
   let snackbar = "";
@@ -30,7 +31,6 @@ const CommonTable = (props) => {
     sendRequest: enrollUserCourseReq,
     status: enrollStatus,
     data: enrollResponse,
-  
   } = useHttp(enrollUserCourse);
 
   let {
@@ -133,10 +133,10 @@ const CommonTable = (props) => {
                           >
                             <div className={classes.courseImg}>
                               <img
-                                src={value}
+                                src={value ? value : dummyCourseImg}
                                 width="100px"
                                 height="100px"
-                                alt="BigCo Inc. logo"
+                                alt="Course Img"
                               />
                             </div>
                           </TableCell>
