@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/ReactGSLABUniversityAssignment/static/css/main.178de9f6.chunk.css",
+    "main.css": "/ReactGSLABUniversityAssignment/static/css/main.e44b67e5.chunk.css",
     "main.js": "/ReactGSLABUniversityAssignment/static/js/main.e04f170a.chunk.js",
     "main.js.map": "/ReactGSLABUniversityAssignment/static/js/main.e04f170a.chunk.js.map",
     "runtime-main.js": "/ReactGSLABUniversityAssignment/static/js/runtime-main.aae8af26.js",
@@ -10,14 +10,14 @@
     "static/js/3.03086592.chunk.js": "/ReactGSLABUniversityAssignment/static/js/3.03086592.chunk.js",
     "static/js/3.03086592.chunk.js.map": "/ReactGSLABUniversityAssignment/static/js/3.03086592.chunk.js.map",
     "index.html": "/ReactGSLABUniversityAssignment/index.html",
-    "static/css/main.178de9f6.chunk.css.map": "/ReactGSLABUniversityAssignment/static/css/main.178de9f6.chunk.css.map",
+    "static/css/main.e44b67e5.chunk.css.map": "/ReactGSLABUniversityAssignment/static/css/main.e44b67e5.chunk.css.map",
     "static/js/2.8de05aea.chunk.js.LICENSE.txt": "/ReactGSLABUniversityAssignment/static/js/2.8de05aea.chunk.js.LICENSE.txt",
     "static/media/App.css": "/ReactGSLABUniversityAssignment/static/media/bgImg.e66eaf91.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.aae8af26.js",
     "static/js/2.8de05aea.chunk.js",
-    "static/css/main.178de9f6.chunk.css",
+    "static/css/main.e44b67e5.chunk.css",
     "static/js/main.e04f170a.chunk.js"
   ]
 }
