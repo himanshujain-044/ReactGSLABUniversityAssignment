@@ -1,5 +1,5 @@
 .section {
-  width: 24rem;
+  max-width: 24rem;
   height: 85%;
   border-radius: 15px;
   background-color: white;
