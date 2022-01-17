@@ -47,6 +47,9 @@ function App() {
           <Route path="*" exact>
             <Redirect to="/login" />
           </Route>
+            <Route path="/" exact>
+            <Redirect to="/login" />
+          </Route>
         </Switch>
       </div>
     </div>
