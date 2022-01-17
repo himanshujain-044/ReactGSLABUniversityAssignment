@@ -1,5 +1,5 @@
 import moment from "moment";
-const serverBaseUrl = "http://localhost:8080";
+const serverBaseUrl = "https://university-app-api.herokuapp.com";
 
 export async function login(loginCredentials) {
   const response = await fetch(`${serverBaseUrl}/login`, {
